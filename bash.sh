@@ -2,19 +2,11 @@
 
 SCRIPTIT_DIR="$HOME/scriptit"
 
-# Load .env with Windows line ending protection
+# Load environment variables from .env
 if [ -f "$SCRIPTIT_DIR/.env" ]; then
     set -a
-    while IFS='=' read -r key value; do
-        # Skip comments and empty lines
-        [[ $key =~ ^#.*$ ]] && continue
-        [[ -z $key ]] && continue
-        # Clean value (remove carriage returns and whitespace)
-        value=$(echo "$value" | sed 's/\r$//' | xargs)
-        export "$key=$value"
-    done < "$SCRIPTIT_DIR/.env"
+    source "$SCRIPTIT_DIR/.env"
     set +a
-    echo -e "\033[32m.env loaded successfully.\033[0m"
 else
     echo -e "\033[33mWarning: .env not found\033[0m"
     return 1
@@ -26,3 +18,7 @@ for config in "$SCRIPTIT_DIR/config"/*.sh; do
 done
 
 alias reload="source ~/.bashrc"
+
+alias backup-db="bash $HOME/scriptit/scripts/backup-db.sh"
+
+alias fix-line-endings="bash $HOME/scriptit/scripts/fix-line-endings.sh"

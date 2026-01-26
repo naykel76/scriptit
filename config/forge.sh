@@ -5,6 +5,7 @@ export SERVER="$SSH_USER@$SERVER_IP"
 
 # =============================================================================
 # REMOTE PATHS
+# Note: Hardcoded for now - may become function parameters later
 # =============================================================================
 export REMOTE_HOME="/home/forge"
 
@@ -19,9 +20,9 @@ export REMOTE_BACKUP="$REMOTE_HOME/backups/$BACKUP_NAME"
 
 
 
-# # =============================================================================
-# # LOCAL PATHS
-# # =============================================================================
+# =============================================================================
+# LOCAL PATHS
+# =============================================================================
 # export LOCAL_BACKUP_DIR="/mnt/c/users/natha/sites/server-backups"
 # export LOCAL_BACKUP="$LOCAL_BACKUP_DIR/$BACKUP_NAME" # what is this used for?
 

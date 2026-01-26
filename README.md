@@ -1,4 +1,4 @@
-# scriptit
+# Scriptit
 
 Shell scripts, aliases, and shortcuts to navigate faster and work smarter.
 
@@ -43,3 +43,14 @@ New-Item -ItemType SymbolicLink -Path $HOME\scriptit\bashrc-link -Target $HOME\.
 # Bash (requires Developer Mode enabled on Windows)
 ln -s ~/.bashrc ~/scriptit/bashrc-link
 ```
+
+## WSL Setup
+
+If using Windows Subsystem for Linux, symlink to your Windows scriptit folder:
+
+```bash
+# Create symlink in WSL
+ln -s /mnt/c/Users/YOUR_USERNAME/scriptit ~/scriptit
+```
+
+Then follow steps 3-4 above in your WSL terminal to add to WSL's `~/.bashrc` and reload.

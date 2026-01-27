@@ -1,7 +1,5 @@
 #!/bin/bash
 
-SCRIPTIT_DIR="$HOME/scriptit"
-
 echo "Fixing line endings in scriptit directory..."
 
 # Fix all .sh files

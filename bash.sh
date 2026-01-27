@@ -1,6 +1,13 @@
 #!/bin/bash
 
-SCRIPTIT_DIR="$HOME/scriptit"
+export SCRIPTIT_DIR="$HOME/scriptit"
+export SCRIPTS="$SCRIPTIT_DIR/scripts"
+
+# Check if BASE is set
+if [ -z "$BASE" ]; then
+    echo -e "\033[31mError: \$BASE is not set. Please add 'export BASE=/path/to/your/projects' to your ~/.bashrc before sourcing scriptit.\033[0m"
+    return 1
+fi
 
 # Load environment variables from .env
 if [ -f "$SCRIPTIT_DIR/.env" ]; then
@@ -19,6 +26,9 @@ done
 
 alias reload="source ~/.bashrc"
 
-alias backup-db="bash $HOME/scriptit/scripts/backup-db.sh"
+# script aliases
+alias backup-db="bash $SCRIPTS/backup-db.sh"
+alias fix-line-endings="bash $SCRIPTS/fix-line-endings.sh"
 
-alias fix-line-endings="bash $HOME/scriptit/scripts/fix-line-endings.sh"
+# these should be moved to a custom config file later
+alias sshfol="ssh -t $SSH_USER@$SERVER_IP 'cd /home/forge/factsoflife.com.au && bash -l'"

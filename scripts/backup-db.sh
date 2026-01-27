@@ -61,5 +61,3 @@ ssh $SERVER "rm ~/$BACKUP_FILE" && \
 # Step 4: Confirmation
 echo "" && \
 echo "✓ Backup complete: $LOCAL_BACKUP_DIR/$BACKUP_FILE"
-
-alias backup-db="bash $HOME/scriptit/scripts/backup-db.sh" 

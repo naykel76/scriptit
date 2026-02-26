@@ -91,3 +91,73 @@ directory.
 
 - **Scripts not found:** Ensure `init.sh` is being sourced in your `~/.bashrc`
 - **Permission denied:** Make scripts executable with `chmod +x ~/scriptit/scripts/*.sh`
+
+-------------------------------------------------------------------------------
+
+## Usage
+
+### How it works
+
+Scriptit is built around a simple principle — any `.sh` file placed in
+`~/scriptit/config/` is automatically loaded when your shell starts. No other
+changes needed.
+
+```
+~/.bashrc → init.sh → config/*.sh → your commands
+```
+
+### Workflow
+
+```mermaid
+flowchart TD
+    A[Open Terminal] --> B[~/.bashrc loads]
+    B --> C[init.sh loads]
+    C --> D[config/*.sh loads]
+    D --> E[Commands available]
+
+    E --> F[Navigate\ncdfol, cdnk]
+    E --> G[Open in VS Code\ncfol, cnk]
+    E --> H[Open in Explorer\nefol, enk]
+    E --> I[Git shortcuts\nga, gco, gpu]
+    E --> J[Laravel shortcuts\npa, pam, pt]
+    E --> K[NPM shortcuts\nnrd, nrb]
+
+    subgraph Adding a project
+        L[Edit config/paths.sh] --> M[Add PATH_MAP entry]
+        M --> N[source ~/.bashrc]
+        N --> O[New commands available\ncfoo, efoo, cdfoo]
+    end
+
+    subgraph Adding new aliases
+        P[Create config/mything.sh] --> Q[Add your aliases]
+        Q --> R[source ~/.bashrc]
+        R --> S[Aliases available]
+    end
+```
+
+```mermaid
+flowchart TD
+    A[Open Terminal] --> B[~/.bashrc loads]
+    B --> C[init.sh loads]
+    C --> D[config/*.sh loads]
+    D --> E[Commands available]
+
+    E --> F[Navigate\ncdfol, cdnk]
+    E --> G[Open in VS Code\ncfol, cnk]
+    E --> H[Open in Explorer\nefol, enk]
+    E --> I[Git shortcuts\nga, gco, gpu]
+    E --> J[Laravel shortcuts\npa, pam, pt]
+    E --> K[NPM shortcuts\nnrd, nrb]
+
+    subgraph Adding a project
+        L[Edit config/paths.sh] --> M[Add PATH_MAP entry]
+        M --> N[source ~/.bashrc]
+        N --> O[New commands available\ncfoo, efoo, cdfoo]
+    end
+
+    subgraph Adding new aliases
+        P[Create config/mything.sh] --> Q[Add your aliases]
+        Q --> R[source ~/.bashrc]
+        R --> S[Aliases available]
+    end
+```

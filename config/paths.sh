@@ -10,16 +10,25 @@
 declare -A PATH_MAP
 
 # Sites
+PATH_MAP[backups]="$BASE/sites/backups"
 PATH_MAP[fol]="$BASE/sites/fol"
+PATH_MAP[fold]="$BASE/sites/factsoflife"
+PATH_MAP[gotime]="$BASE/sites/gotime"
+PATH_MAP[jtb]="$BASE/sites/nk_jtb"
+PATH_MAP[nbw]="$BASE/sites/nbw"
 PATH_MAP[nk]="$BASE/sites/naykel"
+PATH_MAP[sites]="$BASE/sites"
 PATH_MAP[zcc]="$BASE/sites/zcc"
 
 # Packages
-PATH_MAP[authit]="$BASE/nk_packages/authit"
-PATH_MAP[devit]="$BASE/nk_packages/devit"
+PATH_MAP[authit]="$BASE/sites/nk_packages/authit"
+PATH_MAP[contactit]="$BASE/sites/nk_packages/contactit"
+PATH_MAP[devit]="$BASE/sites/nk_packages/devit"
+PATH_MAP[gt]="$BASE/sites/nk_packages/gotime"
+PATH_MAP[postit]="$BASE/sites/nk_packages/postit"
 
 # Scriptit
-PATH_MAP[scriptit]="$HOME/scriptit"
+PATH_MAP[scriptit]="$BASE/scriptit"
 
 # =============================================================================
 # AUTO-GENERATE COMMANDS FROM PATH_MAP
@@ -33,9 +42,15 @@ for alias in "${!PATH_MAP[@]}"; do
     path="${PATH_MAP[$alias]}"
 
     # VS Code shortcut
-    eval "function c${alias}() { code \"${path}\"; }"
+    eval "function c${alias}() {
+        if command -v explorer.exe &>/dev/null; then
+            code \"\$(wslpath -w '${path}')\"
+        else
+            code \"${path}\"
+        fi
+    }"
 
-    # Explorer shortcut (works in both WSL and Linux)
+    # Explorer shortcut (works in both WSL and Git Bash)
     eval "function e${alias}() {
         if command -v explorer.exe &>/dev/null; then
             explorer.exe \"\$(wslpath -w '${path}')\"

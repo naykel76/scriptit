@@ -11,9 +11,17 @@ alias server="powershell.exe /c 'C:\laragon\laragon.exe'"
 # Opens VS Code and starts opencode in the project directory
 # =============================================================================
 
-fol() { cdfol && cfol && opencode; }
-fold() { cdfold && cfold && opencode; }
-gotime()  { cdgt && cgt && opencode; }
-jtb() { cdjtb && cjtb && opencode; }
-nk() { cdnk && cnk && opencode; }
-scriptit() { cdscriptit && cscriptit && opencode; }
+_opencode() {
+    if command -v opencode &>/dev/null; then
+        opencode
+    else
+        echo "Warning: opencode is not installed or not in PATH"
+    fi
+}
+
+fol() { cdfol && cfol && _opencode; }
+fold() { cdfold && cfold && _opencode; }
+gotime()  { cdgt && cgt && _opencode; }
+jtb() { cdjtb && cjtb && _opencode; }
+nk() { cdnk && cnk && _opencode; }
+scriptit() { cdscriptit && cscriptit && _opencode; }

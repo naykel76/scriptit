@@ -38,12 +38,12 @@ PATH_MAP[scriptit]="$BASE/scriptit"
 #   cd<alias>  →  cd to directory  (e.g. cdfol)
 # =============================================================================
 
-for alias in "${!PATH_MAP[@]}"; do
-    path="${PATH_MAP[$alias]}"
+for key in "${!PATH_MAP[@]}"; do
+    path="${PATH_MAP[$key]}"
 
     # VS Code shortcut
-    eval "function c${alias}() {
-        if command -v explorer.exe &>/dev/null; then
+    eval "function c${key}() {
+        if command -v wslpath &>/dev/null; then
             code \"\$(wslpath -w '${path}')\"
         else
             code \"${path}\"
@@ -51,14 +51,14 @@ for alias in "${!PATH_MAP[@]}"; do
     }"
 
     # Explorer shortcut (works in both WSL and Git Bash)
-    eval "function e${alias}() {
-        if command -v explorer.exe &>/dev/null; then
+    eval "function e${key}() {
+        if command -v wslpath &>/dev/null; then
             explorer.exe \"\$(wslpath -w '${path}')\"
         else
-            xdg-open \"${path}\"
+            explorer.exe \"\$(cygpath -w '${path}')\"
         fi
     }"
 
     # cd shortcut
-    eval "function cd${alias}() { cd \"${path}\"; }"
+    eval "function cd${key}() { cd \"${path}\"; }"
 done

@@ -4,112 +4,90 @@ Shell scripts, aliases, and shortcuts to navigate faster and work smarter.
 
 ## Quick Start
 
-### 1. Clone the Repository
+-------------------------------------------------------------------------------
+
+**Step 1 — Clone the repo**
+
+Clone Scriptit into your Windows home folder using Git Bash:
 
 ```bash
 git clone git@github.com:naykel76/scriptit.git ~/scriptit
 ```
 
-### 2. Configure Environment Variables
+> Scriptit lives on Windows at `C:\Users\YOUR_USERNAME\scriptit`. Both Git Bash
+> and WSL will access it from here.
+
+-------------------------------------------------------------------------------
+
+**Step 2 — Create your `.env` file**
 
 ```bash
 cp ~/scriptit/.env.example ~/scriptit/.env
-# Edit .env with your personal details
 ```
 
-### 3. Add Scriptit to Your Shell
+Open `.env` and fill in your personal details (server IP, SSH user etc).
 
-Add the following to your `~/.bashrc`:
+-------------------------------------------------------------------------------
 
-**First, set your BASE path** (choose based on your environment):
+**Step 3 — Add Scriptit to your Git Bash `.bashrc`**
 
-```bash
-# Linux / Git Bash
-export BASE="$HOME/sites/"
-
-# WSL
-export BASE="/mnt/c/Users/YOUR_USERNAME/sites"
-```
-
-> **Important:** `$BASE` points to where YOUR projects live. Scriptit itself
-> always lives at `$HOME/scriptit` - all scriptit scripts, aliases, and the
-> entry point use `$HOME/scriptit`, NOT `$BASE/scriptit`.
-
-**Then, source the scriptit entry point:**
+Open `~/.bashrc` in Git Bash and add the following:
 
 ```bash
-if [ -f "$HOME/scriptit/bash.sh" ]; then
-    source "$HOME/scriptit/bash.sh"
+# Base directory for projects and scripts.
+export BASE="/c/Users/YOUR_USERNAME"
+
+# scriptit entry point
+if [ -f "$BASE/scriptit/init.sh" ]; then
+    source "$BASE/scriptit/init.sh"
 fi
 ```
 
-### 4. Reload Your Shell
+-------------------------------------------------------------------------------
+
+**Step 4 — Add Scriptit to your WSL `.bashrc`**
+
+Open `~/.bashrc` in WSL and add the following. Note that paths use the
+`/mnt/c/` prefix to access the Windows file system:
+
+```bash
+# Base directory for projects and scripts.
+export BASE="/mnt/c/Users/YOUR_USERNAME"
+
+# scriptit entry point
+if [ -f "$BASE/scriptit/init.sh" ]; then
+    source "$BASE/scriptit/init.sh"
+fi
+```
+
+-------------------------------------------------------------------------------
+
+**Step 5 — Reload**
 
 ```bash
 source ~/.bashrc
 ```
 
-## WSL-Specific Setup
+Reloads your shell so all changes take effect immediately without closing the
+terminal.
 
-If you're using Windows Subsystem for Linux, choose one of these options:
-
-### Option A: Clone Directly in WSL (Recommended)
-
-```bash
-git clone git@github.com:naykel76/scriptit.git ~/scriptit
-```
-
-Then follow steps 2-4 above in your WSL terminal.
-
-### Option B: Symlink to Windows Folder
-
-```bash
-# Create symlink to existing Windows scriptit folder
-ln -s /mnt/c/Users/YOUR_USERNAME/scriptit ~/scriptit
-```
-
-Then follow steps 2-4 above in your WSL terminal.
-
-## Optional Configuration
-
-### Quick Bashrc Editing
-
-Create a symlink to edit `.bashrc` directly from your scriptit folder:
-
-**Windows (PowerShell):**
-
-```powershell
-# Requires admin privileges OR Developer Mode enabled
-New-Item -ItemType SymbolicLink -Path $HOME\scriptit\bashrc-link -Target $HOME\.bashrc
-```
-
-**Linux / Git Bash:**
-
-```bash
-ln -s ~/.bashrc ~/scriptit/bashrc-link
-```
-
-> **Windows Note:** Enable Developer Mode (Settings → Privacy & Security → For
-> Developers) to create symlinks without admin privileges.
+-------------------------------------------------------------------------------
 
 ## Troubleshooting
 
-### Line Ending Issues
+### Line ending issues
 
-If you encounter `command not found` or `unexpected end of file` errors, fix
-line endings:
+If you encounter `command not found` or `unexpected end of file` errors, it is
+likely a line ending issue. Fix it by running:
 
 ```bash
 bash ~/scriptit/scripts/fix-line-endings.sh
 ```
 
-This converts CRLF to LF for all `.sh` and `.env` files in your scriptit
+This converts CRLF to LF for all `.sh` and `.env` files in your Scriptit
 directory.
 
-### Common Issues
+### Common issues
 
-- **Scripts not found:** Ensure `$BASE` is set correctly and `bash.sh` is being
-  sourced in your `~/.bashrc`
-- **Permission denied:** Make scripts executable with `chmod +x
-  ~/scriptit/scripts/*.sh`
-- **Path issues in WSL:** Double-check your Windows username in the `$BASE` path
+- **Scripts not found:** Ensure `init.sh` is being sourced in your `~/.bashrc`
+- **Permission denied:** Make scripts executable with `chmod +x ~/scriptit/scripts/*.sh`

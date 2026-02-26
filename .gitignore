@@ -1,5 +1,6 @@
 .env
-bashrc-link
 /tmp
+bashrc-windows
+bashrc-wsl
 nk_tasks.md
 

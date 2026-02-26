@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ -z "$SERVER" ]]; then
     echo "Error: Forge config not loaded. Run 'source ~/.bashrc' first."

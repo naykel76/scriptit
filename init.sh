@@ -53,3 +53,6 @@ done
 alias reload="source ~/.bashrc"
 alias bu-dbase="bash $SCRIPTS/backup-db.sh"
 alias fix-line-endings="bash $SCRIPTS/fix-line-endings.sh"
+
+alias sshfol="ssh -t $SSH_USER@$SERVER_IP 'cd /home/forge/factsoflife.com.au && bash -l'"
+alias sshfold="ssh -t $SSH_USER@$SERVER_IP 'cd /home/forge/fol-old.on-forge.com && bash -l'"

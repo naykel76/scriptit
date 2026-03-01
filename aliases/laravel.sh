@@ -4,6 +4,9 @@
 # LARAVEL / LIVEWIRE ALIASES
 # =============================================================================
 
+# composer clear-cache
+# composer update naykel/gotime naykel/devit
+
 # Base commands
 alias pa="php artisan"
 alias pabu="php artisan boost:update"
@@ -17,17 +20,13 @@ alias pamfs="php artisan migrate:fresh --seed"
 
 # Livewire
 lc() { php artisan livewire:make "$@"; }
-lca() { php artisan livewire:make admin::"$@"; }
 lcon() { php artisan livewire:convert "$@"; }
-lcona() { php artisan livewire:convert admin::"$@"; }
-lf() { php artisan livewire:form "$@"; }
-lm() { php artisan livewire:make "$@"; }
-lma() { php artisan livewire:make admin::"$@"; }
 
-# Livewire (specific)
-alias lci="php artisan livewire:make admin::widgets.index"
-alias lcf="php artisan livewire:make admin::widgets.form"
-alias lcfm="php artisan livewire:make admin::widgets.form-modal"
+lca() { php artisan livewire:make admin::"$@"; }
+lcona() { php artisan livewire:convert admin::"$@"; }
+
+lcu() { php artisan livewire:make user::"$@"; }
+lconu() { php artisan livewire:convert user::"$@"; }
 
 # Optimization
 alias pac="php artisan optimize:clear"

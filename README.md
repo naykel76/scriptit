@@ -134,30 +134,3 @@ flowchart TD
         R --> S[Aliases available]
     end
 ```
-
-```mermaid
-flowchart TD
-    A[Open Terminal] --> B[~/.bashrc loads]
-    B --> C[init.sh loads]
-    C --> D[config/*.sh loads]
-    D --> E[Commands available]
-
-    E --> F[Navigate\ncdfol, cdnk]
-    E --> G[Open in VS Code\ncfol, cnk]
-    E --> H[Open in Explorer\nefol, enk]
-    E --> I[Git shortcuts\nga, gco, gpu]
-    E --> J[Laravel shortcuts\npa, pam, pt]
-    E --> K[NPM shortcuts\nnrd, nrb]
-
-    subgraph Adding a project
-        L[Edit config/paths.sh] --> M[Add PATH_MAP entry]
-        M --> N[source ~/.bashrc]
-        N --> O[New commands available\ncfoo, efoo, cdfoo]
-    end
-
-    subgraph Adding new aliases
-        P[Create config/mything.sh] --> Q[Add your aliases]
-        Q --> R[source ~/.bashrc]
-        R --> S[Aliases available]
-    end
-```

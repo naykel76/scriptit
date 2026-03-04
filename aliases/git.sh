@@ -23,7 +23,8 @@ gs() { git stash "$@"; }
 alias gpa="git push && git push --tags"
 alias gpt="git push --tags" # don't use force it can cause issues with caching
 gp() { git push "$@"; }
-gpufor() { git push --force; } # keep a little longer for safety
+gpu() { git push "$@"; }
+gpfor() { git push --force; } # keep a little longer for safety
 
 # Reset
 alias grh="git reset HEAD~1 --hard"

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/natha/sites/factsoflife/.ai/guidelines/**)",
+      "Read(//c/Users/natha/sites/factsoflife/.ai/skills/**)",
+      "Read(//c/Users/natha/sites/factsoflife/.ai/**)"
+    ]
+  }
+}

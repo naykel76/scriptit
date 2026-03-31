@@ -26,6 +26,7 @@ PATH_MAP[contactit]="$BASE/sites/nk_packages/contactit"
 PATH_MAP[devit]="$BASE/sites/nk_packages/devit"
 PATH_MAP[gt]="$BASE/sites/nk_packages/gotime"
 PATH_MAP[postit]="$BASE/sites/nk_packages/postit"
+PATH_MAP[payit]="$BASE/sites/nk_packages/payit"
 
 # Scriptit
 PATH_MAP[scriptit]="$BASE/scriptit"

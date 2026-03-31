@@ -17,9 +17,36 @@ if [[ -z "$DB_NAME" ]]; then
 fi
 
 # =============================================================================
-# Get Table Name (Optional)
+# Table Selection
 # =============================================================================
-read -p "Table name (leave blank for all tables): " TABLE_NAME
+IMPORTANT_TABLES="courses iblce_outlines lessons model_has_permissions model_has_roles modules permissions posts quiz_answers quiz_questions role_has_permissions roles scheduled_events student_answers student_courses student_lessons users videos"
+
+echo "Table selection:"
+echo "  1) All tables (default)"
+echo "  2) Important tables only (courses, modules, lessons ...)"
+echo "  3) Single table"
+read -p "Choice [1]: " TABLE_CHOICE
+
+case "$TABLE_CHOICE" in
+    2) TABLE_NAME="$IMPORTANT_TABLES"; TABLE_LABEL="important-tables" ;;
+    3) read -p "Table name: " TABLE_NAME; TABLE_LABEL="$TABLE_NAME" ;;
+    *) TABLE_NAME=""; TABLE_LABEL="" ;;
+esac
+
+# =============================================================================
+# Backup Type
+# =============================================================================
+echo "Backup type:"
+echo "  1) Full — schema + data (default)"
+echo "  2) Data only"
+echo "  3) Schema only"
+read -p "Choice [1]: " BACKUP_TYPE_CHOICE
+
+case "$BACKUP_TYPE_CHOICE" in
+    2) DUMP_FLAGS="--no-create-info"; TYPE_LABEL="data-only" ;;
+    3) DUMP_FLAGS="--no-data";        TYPE_LABEL="schema-only" ;;
+    *) DUMP_FLAGS="";                 TYPE_LABEL="full" ;;
+esac
 
 # =============================================================================
 # Show Backup Details and Confirm
@@ -28,9 +55,10 @@ echo ""
 echo "=== Backup Details ==="
 echo "Server: $SERVER"
 echo "Database: $DB_NAME"
-if [[ -n "$TABLE_NAME" ]]; then
-    echo "Table: $TABLE_NAME"
+if [[ -n "$TABLE_LABEL" ]]; then
+    echo "Tables: $TABLE_NAME"
 fi
+echo "Type: $TYPE_LABEL"
 echo "Destination: $LOCAL_BACKUP_DIR"
 echo "====================="
 echo ""
@@ -45,14 +73,14 @@ fi
 # =============================================================================
 # Execute Backup Process
 # =============================================================================
-# Creates timestamped filename: dbname_20240126_143022.sql or dbname_tablename_20240126_143022.sql
-if [[ -n "$TABLE_NAME" ]]; then
-    BACKUP_FILE="${DB_NAME}_${TABLE_NAME}_$(date +%Y-%m-%d_%H%M%S).sql"
-    MYSQLDUMP_CMD="mysqldump --single-transaction $DB_NAME $TABLE_NAME"
-else
-    BACKUP_FILE="${DB_NAME}_$(date +%Y-%m-%d_%H%M%S).sql"
-    MYSQLDUMP_CMD="mysqldump --single-transaction $DB_NAME"
-fi
+# Filename pattern: dbname[_table][_type]_TIMESTAMP.sql
+TIMESTAMP=$(date +%Y-%m-%d_%H%M%S)
+TABLE_PART="${TABLE_LABEL:+_${TABLE_LABEL}}"
+TYPE_PART=$([ "$TYPE_LABEL" != "full" ] && echo "_${TYPE_LABEL}" || echo "")
+BACKUP_FILE="${DB_NAME}${TABLE_PART}${TYPE_PART}_${TIMESTAMP}.sql"
+
+TABLE_ARG="${TABLE_NAME}"
+MYSQLDUMP_CMD="mysqldump --single-transaction $DUMP_FLAGS $DB_NAME $TABLE_ARG"
 
 # Step 1: Create backup on remote server
 echo "Creating backup on server..."

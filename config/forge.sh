@@ -7,14 +7,14 @@ export SERVER="$SSH_USER@$SERVER_IP"
 
 # =============================================================================
 # REMOTE PATHS
-# Note: Hardcoded for now - may become function parameters later
+# (REMOTE_HOME and SITE_DIR set in .env)
 # =============================================================================
-export REMOTE_HOME="/home/forge"
+export SITE_PATH="$REMOTE_HOME/$SITE_DIR"  # e.g. /home/forge/factsoflife.com.au
 
-# Site directories
-export SITE_DIR="factsoflife.com.au"
-export SITE_PATH="$REMOTE_HOME/$SITE_DIR"
-
-# Backup paths
-export BACKUP_NAME="${SITE_DIR}.tar.gz"
-export REMOTE_BACKUP="$REMOTE_HOME/backups/$BACKUP_NAME"
+# All sites (used for interactive selection in scripts)
+SITES=(
+    "factsoflife.com.au"
+    "naykel.com.au"
+    "zakscues.com.au"
+    fol.on-forge.com
+)

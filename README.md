@@ -99,6 +99,23 @@ directory.
 
 ## Usage
 
+### JTB Docs Sync
+
+Use `sync-jtb-docs` to synchronise JTB docs between:
+
+- `~/sites/nk_jtb/docs`
+- `~/sites/naykel/resources/views/docs/jtb`
+
+Commands:
+
+- `sync-jtb-docs` — run the live two-way sync
+- `sync-jtb-docs --dry-run` — preview actions without writing
+- `sync-jtb-docs-dry` — shortcut for a dry run
+- `sync-jtb-docs --delete` — also propagate deletions based on the last sync state
+
+On the first run, if no sync state exists yet, overlapping files bootstrap from `nk_jtb/docs` into the Laravel docs copy. Files that exist only on one side are copied across so nothing unique is dropped.
+
+Conflict copies, logs, and sync state are stored in `.data/jtb-docs-sync/`.
 ### How it works
 
 Scriptit is built around a simple principle — any `.sh` file placed in

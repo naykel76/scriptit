@@ -37,6 +37,9 @@ Open `~/.bashrc` in Git Bash and add the following:
 # Base directory for projects and scripts.
 export BASE="/c/Users/YOUR_USERNAME"
 
+# Enable native Windows symlinks in Git Bash (requires Developer Mode).
+export MSYS=winsymlinks:nativestrict
+
 # scriptit entry point
 if [ -f "$BASE/scriptit/init.sh" ]; then
     source "$BASE/scriptit/init.sh"

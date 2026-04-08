@@ -15,9 +15,9 @@ PATH_MAP[fol]="$BASE/sites/fol"
 PATH_MAP[fold]="$BASE/sites/factsoflife"
 PATH_MAP[gotime]="$BASE/sites/gotime"
 PATH_MAP[jtb]="$BASE/sites/nk_jtb"
-PATH_MAP[nbw]="$BASE/sites/nbw"
 PATH_MAP[nk]="$BASE/sites/naykel"
 PATH_MAP[sites]="$BASE/sites"
+PATH_MAP[skills]="$BASE/sites/skills-and-guidelines"
 PATH_MAP[zcc]="$BASE/sites/zcc"
 
 # Packages
@@ -25,8 +25,8 @@ PATH_MAP[authit]="$BASE/sites/nk_packages/authit"
 PATH_MAP[contactit]="$BASE/sites/nk_packages/contactit"
 PATH_MAP[devit]="$BASE/sites/nk_packages/devit"
 PATH_MAP[gt]="$BASE/sites/nk_packages/gotime"
-PATH_MAP[postit]="$BASE/sites/nk_packages/postit"
 PATH_MAP[payit]="$BASE/sites/nk_packages/payit"
+PATH_MAP[postit]="$BASE/sites/nk_packages/postit"
 
 # Scriptit
 PATH_MAP[scriptit]="$BASE/scriptit"

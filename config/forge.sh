@@ -16,5 +16,22 @@ SITES=(
     "factsoflife.com.au"
     "naykel.com.au"
     "zakscues.com.au"
-    fol.on-forge.com
+    "fol.on-forge.com"
+)
+
+# Databases (used for interactive selection in scripts)
+DATABASES=(
+    "fol_dbase"
+    "fol_dev_dbase"
+    "nk_dbase"
+)
+
+# Common backup locations (relative to site root)
+SITE_LOCATIONS=(
+    "storage/app/public/content"
+    "storage/app/public/courses"
+    "storage/app/public/media-documents"
+    "storage/app/public/media-downloads"
+    "storage/app/public/media-videos"
+    "storage/app/public/videos"
 )

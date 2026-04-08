@@ -1,15 +1,37 @@
 #!/usr/bin/env bash
 
+SCRIPTIT_DIR="${SCRIPTIT_DIR:-$HOME/scriptit}"
+
+if [[ -f "$SCRIPTIT_DIR/.env" ]]; then
+    set -a; source "$SCRIPTIT_DIR/.env"; set +a
+fi
+
+source "$SCRIPTIT_DIR/config/forge.sh"
+
 if [[ -z "$SERVER" ]]; then
-    echo "Error: Forge config not loaded. Run 'source ~/.bashrc' first."
+    echo "Error: Could not load Forge config from $SCRIPTIT_DIR"
     exit 1
 fi
 
 # =============================================================================
-# Get Database Name
+# Database Selection
 # =============================================================================
-# Prompt for database name
-read -p "Database name: " DB_NAME
+echo "Select database:"
+for i in "${!DATABASES[@]}"; do
+    echo "  $((i+1))) ${DATABASES[$i]}"
+done
+CUSTOM_DB_CHOICE=$(( ${#DATABASES[@]} + 1 ))
+echo "  $CUSTOM_DB_CHOICE) Other (enter manually)"
+read -p "Choice [1]: " DB_CHOICE
+
+if [[ -z "$DB_CHOICE" || "$DB_CHOICE" == "1" ]]; then
+    DB_NAME="${DATABASES[0]}"
+elif [[ "$DB_CHOICE" == "$CUSTOM_DB_CHOICE" ]]; then
+    read -p "Database name: " DB_NAME
+else
+    DB_INDEX=$(( DB_CHOICE - 1 ))
+    DB_NAME="${DATABASES[$DB_INDEX]}"
+fi
 
 if [[ -z "$DB_NAME" ]]; then
     echo "Error: Database name cannot be empty"
@@ -63,9 +85,9 @@ echo "Destination: $LOCAL_BACKUP_DIR"
 echo "====================="
 echo ""
 
-read -p "Continue with backup? (y/n): " CONFIRM
+read -p "Continue with backup? (Y/n): " CONFIRM
 
-if [[ "$CONFIRM" != "y" ]]; then
+if [[ "${CONFIRM:-y}" != "y" ]]; then
     echo "Backup cancelled"
     exit 0
 fi

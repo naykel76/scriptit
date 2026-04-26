@@ -18,6 +18,7 @@ PATH_MAP[jtb]="$BASE/sites/nk_jtb"
 PATH_MAP[nk]="$BASE/sites/naykel"
 PATH_MAP[sites]="$BASE/sites"
 PATH_MAP[skills]="$BASE/sites/skills-and-guidelines"
+PATH_MAP[wig]="$BASE/sites/wiggity"
 PATH_MAP[zcc]="$BASE/sites/zcc"
 
 # Packages

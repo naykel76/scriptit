@@ -41,11 +41,16 @@ fi
 # =============================================================================
 # Table Selection
 # =============================================================================
-IMPORTANT_TABLES="courses iblce_outlines lessons model_has_permissions model_has_roles modules permissions posts quiz_answers quiz_questions role_has_permissions roles scheduled_events student_answers student_courses student_lessons users videos"
+# IMPORTANT_TABLES="programs courses modules lessons quiz_questions quiz_answers model_has_permissions model_has_roles permissions role_has_permissions roles users iblce_outlines posts"
+
+CONTENT_TABLES="programs courses modules lessons quiz_questions quiz_answers iblce_outlines posts"
+USER_TABLES="model_has_permissions model_has_roles permissions role_has_permissions roles users"
+
+IMPORTANT_TABLES="$CONTENT_TABLES"
 
 echo "Table selection:"
 echo "  1) All tables (default)"
-echo "  2) Important tables only (courses, modules, lessons ...)"
+echo "  2) Important tables only (programs, courses, modules, lessons ...)"
 echo "  3) Single table"
 read -p "Choice [1]: " TABLE_CHOICE
 
@@ -99,9 +104,11 @@ fi
 TIMESTAMP=$(date +%Y-%m-%d_%H%M%S)
 TABLE_PART="${TABLE_LABEL:+_${TABLE_LABEL}}"
 TYPE_PART=$([ "$TYPE_LABEL" != "full" ] && echo "_${TYPE_LABEL}" || echo "")
+# BACKUP_FILE="fol_dbase.sql" # TEMP OVERRIDE
 BACKUP_FILE="${DB_NAME}${TABLE_PART}${TYPE_PART}_${TIMESTAMP}.sql"
 
 TABLE_ARG="${TABLE_NAME}"
+
 MYSQLDUMP_CMD="mysqldump --single-transaction $DUMP_FLAGS $DB_NAME $TABLE_ARG"
 
 # Step 1: Create backup on remote server

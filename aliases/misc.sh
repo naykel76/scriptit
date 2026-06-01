@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # =============================================================================
-# SERVER
+# LOCAL SERVER
 # =============================================================================
 
 alias server="powershell.exe /c 'C:\laragon\laragon.exe'"
@@ -25,10 +25,3 @@ gotime()  { cdgt && cgt && _opencode; }
 jtb() { cdjtb && cjtb && _opencode; }
 nk() { cdnk && cnk && _opencode; }
 scriptit() { cdscriptit && cscriptit && _opencode; }
-
-# =============================================================================
-# DOCS SYNC
-# =============================================================================
-
-alias sync-jtb='node "$SCRIPTS/sync-jtb-docs.mjs"'
-alias sync-jtb-dry='sync-jtb-docs --dry-run'

@@ -17,6 +17,9 @@ const defaults = {
     logFile: process.env.JTB_DOCS_SYNC_LOG || path.join(dataDir, 'sync.log'),
     stateFile: process.env.JTB_DOCS_SYNC_STATE || path.join(dataDir, 'sync-state.json'),
     conflictDir: process.env.JTB_DOCS_SYNC_CONFLICTS || path.join(dataDir, 'conflicts'),
+    navSource: process.env.JTB_NAV_SOURCE || path.join(os.homedir(), 'sites', 'nk_jtb', 'scripts', 'jtb-nav.json'),
+    navTarget: process.env.JTB_NAV_TARGET || path.join(os.homedir(), 'sites', 'naykel', 'resources', 'navs', 'nav-jtb.json'),
+    navStateFile: process.env.JTB_NAV_SYNC_STATE || path.join(dataDir, 'nav-sync-state.json'),
 };
 
 const stats = {
@@ -48,6 +51,15 @@ try {
 } catch (error) {
     stats.errors += 1;
     log(`ERROR: ${error.message}`, true);
+    process.exitCode = 1;
+}
+
+log(`=== Syncing nav file: ${defaults.navSource} <-> ${defaults.navTarget} ===`, true);
+try {
+    syncFilePair(defaults.navSource, defaults.navTarget, defaults.navStateFile, options);
+} catch (error) {
+    stats.errors += 1;
+    log(`ERROR (nav sync): ${error.message}`, true);
     process.exitCode = 1;
 }
 
@@ -99,7 +111,7 @@ function parseArgs(args) {
 }
 
 function printHelp() {
-    console.log(`JTB docs sync\n\nUsage:\n  sync-jtb-docs [--dry-run] [--delete] [--verbose]\n\nOptions:\n  --dry-run, -n   Preview actions without writing changes\n  --delete        Propagate deletions based on previous sync state\n  --verbose, -v   Print all actions while syncing\n  --help, -h      Show this help\n\nFirst run:\n  If no sync state exists yet, overlapping files bootstrap from nk_jtb/docs into\n  the Laravel docs copy. Files that exist only on one side are copied across.\n`);
+    console.log(`JTB docs sync\n\nUsage:\n  sync-jtb-docs [--dry-run] [--delete] [--verbose]\n\nOptions:\n  --dry-run, -n   Preview actions without writing changes\n  --delete        Propagate deletions based on previous sync state\n  --verbose, -v   Print all actions while syncing\n  --help, -h      Show this help\n\nSyncs:\n  1. nk_jtb/docs  <->  naykel/resources/views/docs/jtb  (folder)\n  2. nk_jtb/scripts/jtb-nav.json  <->  naykel/resources/navs/nav-jtb.json  (file pair)\n\nFirst run:\n  If no sync state exists yet, overlapping files bootstrap from the source side.\n  Files that exist only on one side are copied across.\n`);
 }
 
 function syncFolders(pathA, pathB, runtimeOptions) {
@@ -247,6 +259,108 @@ function syncFolders(pathA, pathB, runtimeOptions) {
 
     if (!runtimeOptions.dryRun) {
         saveState(defaults.stateFile, newState);
+    }
+}
+
+function syncFilePair(srcPath, destPath, stateFile, runtimeOptions) {
+    const label = `${path.basename(srcPath)} <-> ${path.basename(destPath)}`;
+    const hasState = fs.existsSync(stateFile);
+    const state = hasState ? JSON.parse(fs.readFileSync(stateFile, 'utf8')) : {};
+    const prevSrc = state.src || null;
+    const prevDest = state.dest || null;
+    const hasSrc = fs.existsSync(srcPath);
+    const hasDest = fs.existsSync(destPath);
+
+    if (!hasSrc && !hasDest) {
+        log(`[NAV] Neither file found: ${label}`, true);
+        return;
+    }
+
+    const hashSrc = hasSrc ? hashFile(srcPath) : null;
+    const hashDest = hasDest ? hashFile(destPath) : null;
+    const newState = { src: hashSrc, dest: hashDest };
+
+    if (hashSrc && hashDest) {
+        if (!hasState) {
+            if (hashSrc !== hashDest) {
+                stats.syncedAtoB += 1;
+                if (runtimeOptions.dryRun) {
+                    log(`[DRY-RUN] Would bootstrap nav target from source: ${label}`);
+                } else {
+                    copyFile(srcPath, destPath);
+                    log(`Bootstrapped nav target from source: ${label}`);
+                }
+            }
+            newState.src = hashSrc;
+            newState.dest = hashSrc;
+        } else {
+            const srcChanged = hashSrc !== prevSrc;
+            const destChanged = hashDest !== prevDest;
+
+            if (srcChanged && destChanged) {
+                stats.conflicts += 1;
+                const conflictDir = buildConflictDir(path.basename(srcPath));
+                log(`[CONFLICT] Both nav files modified: ${label}`, true);
+                log(`Saved to: ${conflictDir}`, true);
+                if (!runtimeOptions.dryRun) {
+                    ensureDir(conflictDir);
+                    const ext = path.extname(srcPath);
+                    const base = path.basename(srcPath, ext);
+                    copyFile(srcPath, path.join(conflictDir, `${base}-source${ext}`));
+                    copyFile(destPath, path.join(conflictDir, `${path.basename(destPath, ext)}-target${ext}`));
+                } else {
+                    log('[DRY-RUN] Would save both versions to conflict folder', true);
+                }
+                newState.src = hashSrc;
+                newState.dest = hashDest;
+            } else if (srcChanged) {
+                stats.syncedAtoB += 1;
+                if (runtimeOptions.dryRun) {
+                    log(`[DRY-RUN] Would update nav target from source: ${label}`);
+                } else {
+                    copyFile(srcPath, destPath);
+                    log(`Updated nav target from source: ${label}`);
+                }
+                newState.src = hashSrc;
+                newState.dest = hashSrc;
+            } else if (destChanged) {
+                stats.syncedBtoA += 1;
+                if (runtimeOptions.dryRun) {
+                    log(`[DRY-RUN] Would update nav source from target: ${label}`);
+                } else {
+                    copyFile(destPath, srcPath);
+                    log(`Updated nav source from target: ${label}`);
+                }
+                newState.src = hashDest;
+                newState.dest = hashDest;
+            } else {
+                log(`Nav files unchanged: ${label}`);
+            }
+        }
+    } else if (hashSrc) {
+        stats.newToB += 1;
+        if (runtimeOptions.dryRun) {
+            log(`[DRY-RUN] Would copy nav file to target: ${label}`);
+        } else {
+            copyFile(srcPath, destPath);
+            log(`Copied nav file to target: ${label}`);
+        }
+        newState.src = hashSrc;
+        newState.dest = hashSrc;
+    } else {
+        stats.newToA += 1;
+        if (runtimeOptions.dryRun) {
+            log(`[DRY-RUN] Would copy nav file to source: ${label}`);
+        } else {
+            copyFile(destPath, srcPath);
+            log(`Copied nav file to source: ${label}`);
+        }
+        newState.src = hashDest;
+        newState.dest = hashDest;
+    }
+
+    if (!runtimeOptions.dryRun) {
+        saveState(stateFile, newState);
     }
 }
 

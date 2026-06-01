@@ -17,13 +17,14 @@ SITES=(
     "naykel.com.au"
     "zakscues.com.au"
     "fol.on-forge.com"
+    "nk.on-forge.com"
 )
 
 # Databases (used for interactive selection in scripts)
 DATABASES=(
     "fol_dbase"
     "fol_dev_dbase"
-    "nk_dbase"
+    "dev_dbase"
 )
 
 # Common backup locations (relative to site root)

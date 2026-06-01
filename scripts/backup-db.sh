@@ -43,7 +43,7 @@ fi
 # =============================================================================
 # IMPORTANT_TABLES="programs courses modules lessons quiz_questions quiz_answers model_has_permissions model_has_roles permissions role_has_permissions roles users iblce_outlines posts"
 
-CONTENT_TABLES="programs courses modules lessons quiz_questions quiz_answers iblce_outlines posts"
+CONTENT_TABLES="programs courses modules lessons quiz_questions quiz_answers iblce_outlines dco_hours"
 USER_TABLES="model_has_permissions model_has_roles permissions role_has_permissions roles users"
 
 IMPORTANT_TABLES="$CONTENT_TABLES"
@@ -109,7 +109,8 @@ BACKUP_FILE="${DB_NAME}${TABLE_PART}${TYPE_PART}_${TIMESTAMP}.sql"
 
 TABLE_ARG="${TABLE_NAME}"
 
-MYSQLDUMP_CMD="mysqldump --single-transaction $DUMP_FLAGS $DB_NAME $TABLE_ARG"
+# MYSQLDUMP_CMD="mysqldump --single-transaction $DUMP_FLAGS $DB_NAME $TABLE_ARG" # no headings
+MYSQLDUMP_CMD="mysqldump --single-transaction --complete-insert $DUMP_FLAGS $DB_NAME $TABLE_ARG"
 
 # Step 1: Create backup on remote server
 echo "Creating backup on server..."

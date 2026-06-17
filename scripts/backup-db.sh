@@ -41,12 +41,15 @@ fi
 # =============================================================================
 # Table Selection
 # =============================================================================
-# IMPORTANT_TABLES="programs courses modules lessons quiz_questions quiz_answers model_has_permissions model_has_roles permissions role_has_permissions roles users iblce_outlines posts"
+CONTENT_TABLES="programs courses modules lessons quiz_questions quiz_answers dcos dco_hours scheduled_events videos posts"
+USER_TABLES="users orders student_courses student_lessons student_answers"
+PERMISSION_TABLES="model_has_permissions model_has_roles permissions role_has_permissions roles"
 
-CONTENT_TABLES="programs courses modules lessons quiz_questions quiz_answers iblce_outlines dco_hours"
-USER_TABLES="model_has_permissions model_has_roles permissions role_has_permissions roles users"
+IMPORTANT_TABLES="$CONTENT_TABLES $PERMISSION_TABLES $USER_TABLES"
 
-IMPORTANT_TABLES="$CONTENT_TABLES"
+DEFAULT_EXCLUDED_TABLES="migrations cache cache_locks failed_jobs jobs job_batches password_reset_tokens sessions" 
+
+EXCLUDED_TABLES="$DEFAULT_EXCLUDED_TABLES"
 
 echo "Table selection:"
 echo "  1) All tables (default)"
@@ -59,6 +62,15 @@ case "$TABLE_CHOICE" in
     3) read -p "Table name: " TABLE_NAME; TABLE_LABEL="$TABLE_NAME" ;;
     *) TABLE_NAME=""; TABLE_LABEL="" ;;
 esac
+
+EXCLUDE_TABLE_ARGS=""
+if [[ -z "$TABLE_LABEL" ]]; then
+    for EXCLUDED_TABLE in $EXCLUDED_TABLES; do
+        EXCLUDE_TABLE_ARGS+=" --ignore-table=${DB_NAME}.${EXCLUDED_TABLE}"
+    done
+else
+    EXCLUDED_TABLES=""
+fi
 
 # =============================================================================
 # Backup Type
@@ -110,7 +122,7 @@ BACKUP_FILE="${DB_NAME}${TABLE_PART}${TYPE_PART}_${TIMESTAMP}.sql"
 TABLE_ARG="${TABLE_NAME}"
 
 # MYSQLDUMP_CMD="mysqldump --single-transaction $DUMP_FLAGS $DB_NAME $TABLE_ARG" # no headings
-MYSQLDUMP_CMD="mysqldump --single-transaction --complete-insert $DUMP_FLAGS $DB_NAME $TABLE_ARG"
+MYSQLDUMP_CMD="mysqldump --single-transaction --complete-insert $DUMP_FLAGS $DB_NAME $TABLE_ARG $EXCLUDE_TABLE_ARGS"
 
 # Step 1: Create backup on remote server
 echo "Creating backup on server..."
@@ -127,4 +139,5 @@ ssh $SERVER "rm ~/$BACKUP_FILE" && \
 
 # Step 4: Confirmation
 echo "" && \
-echo "✓ Backup complete: $LOCAL_BACKUP_DIR/$BACKUP_FILE"
+echo "✓ Backup complete: $LOCAL_BACKUP_DIR/$BACKUP_FILE" && \
+[[ -n "$EXCLUDED_TABLES" ]] && echo "Note: excluded tables from the full backup: $EXCLUDED_TABLES"
